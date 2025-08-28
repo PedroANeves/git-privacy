@@ -37,6 +37,7 @@ function assert() {
     echo "actual  : $actual"
     exit 1
   fi
+  echo "########################################"
 }
 
 function commit_with_clear_timestamp() {
