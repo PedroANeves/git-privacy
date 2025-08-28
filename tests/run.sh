@@ -2,18 +2,18 @@
 
 set -eu
 
-# tests.sh - run tests
+# tests/run.sh - run tests
 
 die() { echo "$*" 1>&2 ; exit 1; }
 
 source git-privacy
 
 # tests location setup
-rm -fr playground
-mkdir -p playground
+rm -fr tests/playground
+mkdir -p tests/playground
 
 # old commit with timestamp
-pushd playground > /dev/null || exit
+pushd tests/playground > /dev/null || exit
 git init
 GIT_AUTHOR_DATE=2025-05-05T05:05:05+0500 \
   GIT_COMMITTER_DATE=2026-06-06T06:06:06+0600 \
