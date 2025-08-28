@@ -4,28 +4,31 @@
 
 die() { echo "$*" 1>&2 ; exit 1; }
 
-BASE=$(mktemp -d)
-pushd "$BASE" > /dev/null || exit
-mkdir playground
+# tests location setup
+rm -fr playground
+mkdir -p playground
 
+# old commit with timestamp
 pushd playground > /dev/null || exit
+git init
+GIT_AUTHOR_DATE=2025-05-05T05:05:05+0500 \
+  GIT_COMMITTER_DATE=2026-06-06T06:06:06+0600 \
+  git commit --allow-empty -m 'old commit'
 
-git init > /dev/null
-GIT_AUTHOR_DATE=2000-01-01T01:01:01+0000 \
-  GIT_COMMITTER_DATE=2000-02-02T02:02:02+0000 \
-  git commit --allow-empty -m 'old commit' > /dev/null
-  actual=$(git log --pretty=format:"%ai|%ci|%s")
+# git privacy redact
+GIT_COMMITTER_DATE=2026-06-06T00:00:00+0000 \
+  git commit --amend --date="2025-05-05T00:00:00+0000" \
+  --no-edit --no-verify --allow-empty
+actual=$(git log --pretty=format:"%ai|%ci|%s")
 popd > /dev/null || exit
 
-
-expected="2000-01-01 00:00:00 +0000|2000-02-02 00:00:00 +0000|old commit"
+# assert
+expected="2025-05-05 00:00:00 +0000|2026-06-06 00:00:00 +0000|old commit"
 if [[ "$actual" == "$expected" ]]; then
   echo OK
+  exit 0
 else
-  echo "test at $BASE"
   echo "expected: $expected"
   echo "actual  : $actual"
+  exit 1
 fi
-
-popd > /dev/null || exit
-
