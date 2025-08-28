@@ -168,6 +168,6 @@ case ${1:-''} in
     privacy_redact
     ;;
   *)
-    echo "Unknown command '$*'"
+    echo "git-privacy: Unknown command '$*'"
     exit 1
 esac
