@@ -24,6 +24,10 @@ function privacy_init() {
     exit 1
   fi
 
+  # copies git-privacy locally
+  cp "$(which git-privacy)" .git/hooks/git-privacy
+
+  # creates hook
   echo "$__post_commit" > .git/hooks/post-commit
   chmod +x .git/hooks/post-commit
 }

@@ -144,3 +144,24 @@ _teardown
 
 # ASSERT
 assert "0" "$actual"
+
+###############################################################################
+: test init copies git-privacy to .git/
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+
+# ACT
+# git privacy init
+privacy_init
+actual="$(find .git/hooks/ -name 'git-privacy')"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+assert ".git/hooks/git-privacy" "$actual"
+
