@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -eu
+
+# git privacy - keep your coding hours private
+
+function redact() {
+  # redacts last commit HH:MM:SS to 00:00:00
+
+  # avoid infinite commit loop / disable redacting
+  [[ -z ${GIT_PRIVACY_DISABLE:-''} ]] || return
+
+  # get author date
+  author_old_date=$(git log --date=format:'%Y-%m-%d' --pretty=format:'%ad' -n1)
+
+  # get committer date/time
+  commit_old_date=$(git log --date=format:'%Y-%m-%d' --pretty=format:'%cd' -n1)
+  # commit_old_time=$(git log --date=format:'%H:%M:%S' --pretty=format:'%cd' -n1)
+
+  # stash changes (git commit --amend destroys untracked changes)
+  # TODO stash 
+
+  # calculate new author/commit timestamp
+  author_new_datetime="${author_old_date}T00:00:00+0000"
+  commit_new_datetime="${commit_old_date}T00:00:00+0000"
+
+  # amend commit
+  GIT_PRIVACY_DISABLE=1 GIT_COMMITTER_DATE="$commit_new_datetime" \
+    git commit \
+    --amend --date="$author_new_datetime" --no-edit --no-verify --allow-empty
+
+  # apply stash if any
+  # TODO unstash 
+
+  return
+}

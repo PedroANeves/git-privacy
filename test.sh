@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
+set -eu
+
 # tests.sh - run tests
 
 die() { echo "$*" 1>&2 ; exit 1; }
+
+source git-privacy
 
 # tests location setup
 rm -fr playground
@@ -16,9 +20,7 @@ GIT_AUTHOR_DATE=2025-05-05T05:05:05+0500 \
   git commit --allow-empty -m 'old commit'
 
 # git privacy redact
-GIT_COMMITTER_DATE=2026-06-06T00:00:00+0000 \
-  git commit --amend --date="2025-05-05T00:00:00+0000" \
-  --no-edit --no-verify --allow-empty
+redact
 actual=$(git log --pretty=format:"%ai|%ci|%s")
 popd > /dev/null || exit
 

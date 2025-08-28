@@ -12,3 +12,8 @@ Setup `git-privacy` on a repository using:
 ```bash
 git-privacy init
 ```
+
+To redact the last commit timestamp use
+```bash
+git-privacy redact
+```
