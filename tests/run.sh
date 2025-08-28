@@ -262,6 +262,26 @@ _teardown
 assert "0" "$actual"
 
 ###############################################################################
+: test version prints version
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+
+# ACT
+# git privacy version
+actual="$(privacy_version)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+
+assert "git-privacy v$git_privacy_version" "$actual"
+
+###############################################################################
 : test help prints help
 ###############################################################################
 
