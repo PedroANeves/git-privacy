@@ -20,7 +20,7 @@ commit_with_clear_timestamp
 
 # ACT
 # git privacy redact
-redact
+privacy_redact
 actual=$(git log --pretty=format:"%ai|%ci|%s")
 
 # TEARDOWN
@@ -43,7 +43,7 @@ echo 'data' > f
 
 # ACT
 # git privacy redact
-redact
+privacy_redact
 actual="$(git --no-pager diff --no-index -- /dev/null f | cat)"
 
 # TEARDOWN
@@ -76,7 +76,7 @@ echo 'data' > f
 # ACT
 # git privacy redact
 git add f
-redact
+privacy_redact
 actual="$(git --no-pager status | cat)"
 
 # TEARDOWN

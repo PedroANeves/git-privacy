@@ -4,8 +4,8 @@ set -eu
 
 # git privacy - keep your coding hours private
 
-function redact() {
-  # redacts last commit HH:MM:SS to 00:00:00
+function privacy_redact() {
+  # redacts last commit HH:MM:SS+ZZZZ to 00:00:00+0000
 
   # avoid infinite commit loop / disable redacting
   [[ -z ${GIT_PRIVACY_DISABLE:-''} ]] || return
