@@ -32,7 +32,6 @@ function assert() {
 
   if [[ "$expected" == "$actual" ]]; then
     echo OK
-    exit 0
   else
     echo "expected: $expected"
     echo "actual  : $actual"
