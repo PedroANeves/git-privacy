@@ -2,7 +2,7 @@
 
 set -eu
 
-# git privacy - keep your coding hours private
+# git privacy - see `privacy_help()`.
 
 git_privacy_version='0.1.0'
 
@@ -12,7 +12,8 @@ function privacy_version() {
 
 function privacy_help() {
   help_text=$(cat <<-EOF
-	git privacy
+	git privacy - keep your coding hours private.
+	
 	Usage:  git privacy [init|redact|verify]
 	  or:   git privacy [--version]
 	  or:   git privacy [--help|help|h]
@@ -82,7 +83,7 @@ function privacy_init() {
 }
 
 function privacy_redact() {
-  # redacts last commit HH:MM:SS+ZZZZ to 00:00:00+0000
+  # redacts last commit YYYY-mm-DDTHH:MM:SS+ZZZZ to YYYY-mm-DDT00:00:00+0000
 
   # avoid infinite commit loop / disable redacting
   [[ -z ${GIT_PRIVACY_DISABLE:-''} ]] || return

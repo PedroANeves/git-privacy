@@ -387,7 +387,8 @@ _teardown
 
 # ASSERT
 read -d '' expected << EOF || true
-git privacy
+git privacy - keep your coding hours private.
+
 Usage:  git privacy [init|redact|verify]
   or:   git privacy [--version]
   or:   git privacy [--help|help|h]
