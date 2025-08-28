@@ -183,7 +183,11 @@ actual="$(privacy_verify; echo $?)"
 _teardown
 
 # ASSERT
-assert "1" "$actual"
+expected="branch has no upstream set, checking all commits.
+leaked timestamps:
+ddea085|2025-05-05 05:05:05 +0500|2026-06-06 06:06:06 +0600
+1"
+assert "$expected" "$actual"
 
 ###############################################################################
 : test verify return no errors if you only have redacted timestamps
@@ -203,7 +207,9 @@ actual="$(privacy_verify; echo $?)"
 _teardown
 
 # ASSERT
-assert "0" "$actual"
+expected="branch has no upstream set, checking all commits.
+0"
+assert "$expected" "$actual"
 
 ###############################################################################
 : test verify return error if even a single commit has leaked timestamps
@@ -227,7 +233,11 @@ actual="$(privacy_verify; echo $?)"
 _teardown
 
 # ASSERT
-assert "1" "$actual"
+expected="branch has no upstream set, checking all commits.
+leaked timestamps:
+f7176c6|2025-05-05 05:05:05 +0500|2026-06-06 06:06:06 +0600
+1"
+assert "$expected" "$actual"
 
 ###############################################################################
 : test verify by defaults only check local only commits
@@ -259,7 +269,9 @@ actual="$(privacy_verify; echo $?)"
 _teardown
 
 # ASSERT
-assert "0" "$actual"
+expected="branch has upstream set, checking local commits only.
+0"
+assert "$expected" "$actual"
 
 ###############################################################################
 : test version prints version
@@ -307,11 +319,11 @@ Usage:  git privacy [init|redact|verify]
 init                installs git privacy on current git repo and
                     setup post-commit and pre-push hooks.
 
-redact              used automaticaly by post-commit hook to zero out 
+redact              used automaticaly by post-commit hook to redact
                     commiter and author timestamps.
 
-verify              used automaticaly by pre-push hook to check if current
-                    branch does not has any non zeroed timestamps.
+verify              used automaticaly by pre-push hook to check if
+                    current branch does not has any leaked timestamps.
                     by default, only checks non pushed commits.
 
 -v, --version       prints current version.

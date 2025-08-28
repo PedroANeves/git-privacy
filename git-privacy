@@ -20,16 +20,17 @@ function privacy_help() {
 	init                installs git privacy on current git repo and
 	                    setup post-commit and pre-push hooks.
 
-	redact              used automaticaly by post-commit hook to zero out 
+	redact              used automaticaly by post-commit hook to redact
 	                    commiter and author timestamps.
 
-	verify              used automaticaly by pre-push hook to check if current
-	                    branch does not has any non zeroed timestamps.
+	verify              used automaticaly by pre-push hook to check if
+	                    current branch does not has any leaked timestamps.
 	                    by default, only checks non pushed commits.
 
 	-v, --version       prints current version.
 	-h, --help, help    prints this help.
-	EOF)
+	EOF
+	)
   echo "$help_text"
   return
 }
@@ -60,6 +61,8 @@ function privacy_init() {
   # creates hook
   echo "$__post_commit" > .git/hooks/post-commit
   chmod +x .git/hooks/post-commit
+
+  echo "git privacy v$git_privacy_version initialized on $PWD"
 }
 
 function privacy_redact() {
@@ -87,7 +90,8 @@ function privacy_redact() {
   # amend commit
   GIT_PRIVACY_DISABLE=1 GIT_COMMITTER_DATE="$commit_new_datetime" \
     git commit \
-    --amend --date="$author_new_datetime" --no-edit --no-verify --allow-empty
+    --amend --date="$author_new_datetime" \
+    --no-edit --no-verify --allow-empty --quiet
 
   # apply stash if any
   (( pre_stash_size != post_stash_size )) && git stash pop || true
@@ -101,12 +105,22 @@ function privacy_verify() {
   # if branch has remote,
   if git status -sb | grep -Fq '...'; then
     # check only unpushed commits
+    echo "branch has upstream set, checking local commits only."
     range='@{push}..'
   else
     # check everything
+    echo "branch has no upstream set, checking all commits."
     range=''
   fi
   
+  leaked_timestamps="$(
+    git log ${range} --pretty=format:'%h|%ai|%ci' \
+      | grep -v '00:00:00 +0000'
+  )"
+  if [[ $leaked_timestamps ]]; then
+    echo -e "leaked timestamps:\n$leaked_timestamps"
+  fi
+
   number_of_leaked_timestamps="$(
     git log ${range} --pretty=format:'%ai|%ci' \
       | grep -v '00:00:00 +0000' | wc -l

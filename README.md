@@ -18,7 +18,7 @@ Setup `git-privacy` on a repository using:
 git-privacy init
 ```
 
-To redact the last commit timestamp use
+To redact the last commit timestamp use:
 ```bash
 git-privacy redact
 ```
@@ -28,6 +28,7 @@ timestamps use:
 ```bash
 git-privacy verify
 ```
+By default, `git-privacy verify` checks only un-pushed commits.
 
 Run `git privacy help` for a list of all commands.
 
