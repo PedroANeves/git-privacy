@@ -17,9 +17,19 @@ function _setup() {
   pushd tests/$folder_name > /dev/null || exit 1
 
   git init
+
+  export GIT_AUTHOR_NAME="Alice"
+  export GIT_AUTHOR_EMAIL="alice@example.com"
+  export GIT_COMMITER_NAME="Bob"
+  export GIT_COMMITER_EMAIL="bob@example.com"
 }
 
 function _teardown() {
+  unset GIT_AUTHOR_NAME
+  unset GIT_AUTHOR_EMAIL
+  unset GIT_COMMITER_NAME
+  unset GIT_COMMITER_EMAIL
+
   popd > /dev/null || exit 1
 }
 

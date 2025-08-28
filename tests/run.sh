@@ -9,7 +9,7 @@ source ./git-privacy
 source tests/utils
 
 ###############################################################################
-# test redact last commit
+: test redact last commit
 ###############################################################################
 
 # SETUP
@@ -31,7 +31,7 @@ expected="2025-05-05 00:00:00 +0000|2026-06-06 00:00:00 +0000|old commit"
 assert "$expected" "$actual"
 
 ###############################################################################
-# test redact preserves untracked files
+: test redact BRANCH to redact all commits on branch
 ###############################################################################
 
 # SETUP
@@ -63,7 +63,7 @@ EOF
 assert "$expected" "$actual"
 
 ###############################################################################
-# test redact preserves staged files
+: test redact preserves staged files
 ###############################################################################
 
 # SETUP
