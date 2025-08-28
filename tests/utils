@@ -39,3 +39,11 @@ function assert() {
     exit 1
   fi
 }
+
+function commit_with_clear_timestamp() {
+  # commit with non redacted timestamp
+
+  GIT_AUTHOR_DATE=2025-05-05T05:05:05+0500 \
+    GIT_COMMITTER_DATE=2026-06-06T06:06:06+0600 \
+    git commit --allow-empty -m "${1:-old commit}"
+}
