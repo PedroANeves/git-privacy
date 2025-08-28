@@ -11,9 +11,7 @@ source git-privacy
 source tests/utils
 
 # SETUP
-rm -fr tests/playground
-mkdir -p tests/playground
-pushd tests/playground > /dev/null || exit
+_setup playground
 
 # PREPARE
 # old commit with timestamp

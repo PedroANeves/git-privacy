@@ -6,6 +6,17 @@ set -eu
 
 die() { echo "$*" 1>&2 ; exit 1; }
 
+function _setup() {
+
+  (( $# == 0 )) || (( $# == 1 )) || die "E: Usage: _setup 'folder_name' (got $#: $*)"
+
+  folder_name=${1:-'playground'}
+
+  rm -fr tests/$folder_name
+  mkdir -p tests/$folder_name
+  pushd tests/$folder_name > /dev/null || exit 1
+}
+
 function assert() {
 
   (( $# == 2 )) || die "E: Usage: assert 'expected' 'actual' (got $#: $*)"
