@@ -26,7 +26,7 @@ redact
 actual=$(git log --pretty=format:"%ai|%ci|%s")
 
 # TEARDOWN
-popd > /dev/null || exit
+_teardown
 
 # ASSERT
 expected="2025-05-05 00:00:00 +0000|2026-06-06 00:00:00 +0000|old commit"

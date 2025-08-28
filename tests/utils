@@ -17,6 +17,10 @@ function _setup() {
   pushd tests/$folder_name > /dev/null || exit 1
 }
 
+function _teardown() {
+  popd > /dev/null || exit 1
+}
+
 function assert() {
 
   (( $# == 2 )) || die "E: Usage: assert 'expected' 'actual' (got $#: $*)"
