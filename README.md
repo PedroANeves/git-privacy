@@ -29,6 +29,8 @@ timestamps use:
 git-privacy verify
 ```
 
+Run `git privacy help` for a list of all commands.
+
 ## Make git-privacy available by default
 To make `git-privacy` work by default in all new repos,
 simply init it on your git template

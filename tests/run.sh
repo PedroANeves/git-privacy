@@ -262,3 +262,41 @@ _teardown
 assert "0" "$actual"
 
 ###############################################################################
+: test help prints help
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+
+# ACT
+# git privacy help
+actual="$(privacy_help)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+read -d '' expected << EOF || true
+git privacy
+Usage:  git privacy [init|redact|verify]
+  or:   git privacy [--version]
+  or:   git privacy [--help|help|h]
+
+init                installs git privacy on current git repo and
+                    setup post-commit and pre-push hooks.
+
+redact              used automaticaly by post-commit hook to zero out 
+                    commiter and author timestamps.
+
+verify              used automaticaly by pre-push hook to check if current
+                    branch does not has any non zeroed timestamps.
+                    by default, only checks non pushed commits.
+
+-v, --version       prints current version.
+-h, --help, help    prints this help.
+EOF
+
+assert "$expected" "$actual"
+
