@@ -127,3 +127,27 @@ function privacy_verify() {
   )"
   return "$number_of_leaked_timestamps"
 }
+
+case ${1:-''} in
+  '')
+    true
+    ;;
+  -v|--version)
+    privacy_version
+    ;;
+  -h|--help)
+    privacy_help
+    ;;
+  init)
+    privacy_init
+    ;;
+  verify)
+    privacy_verify
+    ;;
+  redact)
+    privacy_redact
+    ;;
+  *)
+    echo "Unknown command '$*'"
+    exit 1
+esac

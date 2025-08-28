@@ -9,6 +9,48 @@ source ./git-privacy
 source tests/utils
 
 ###############################################################################
+: test git-privacy by itself does not do anything
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_clear_timestamp
+
+# ACT
+# git privacy
+actual=$(../../git-privacy)
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+expected=""
+assert "$expected" "$actual"
+
+###############################################################################
+: test git-privacy command runs that command
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_clear_timestamp
+
+# ACT
+# git privacy
+actual=$(../../git-privacy -v)
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+expected="git-privacy v$git_privacy_version"
+assert "$expected" "$actual"
+
+###############################################################################
 : test redact last commit
 ###############################################################################
 
