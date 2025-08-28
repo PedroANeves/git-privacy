@@ -86,7 +86,7 @@ function privacy_redact() {
   # redacts last commit YYYY-mm-DDTHH:MM:SS+ZZZZ to YYYY-mm-DDT00:00:00+0000
 
   # avoid infinite commit loop / disable redacting
-  [[ -z ${GIT_PRIVACY_DISABLE:-''} ]] || return
+  [[ -z ${GIT_PRIVACY_DISABLE:-''} ]] || exit 0
 
   # get author date
   author_old_date=$(git log --date=format:'%Y-%m-%d' --pretty=format:'%ad' -n1)
@@ -118,6 +118,9 @@ function privacy_redact() {
 
 function privacy_verify() {
   # checks if there are leaked timestamps
+
+  # disable verification
+  [[ -z ${GIT_PRIVACY_DISABLE:-''} ]] || exit 0
 
   # if branch has remote,
   if git status -sb | grep -Fq '...'; then

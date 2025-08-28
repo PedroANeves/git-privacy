@@ -409,3 +409,95 @@ EOF
 
 assert "$expected" "$actual"
 
+###############################################################################
+: test set var GIT_PRIVACY_DISABLE to skip redacting
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_clear_timestamp
+
+# ACT
+# git privacy redact
+$(GIT_PRIVACY_DISABLE=1 privacy_redact)
+actual=$(git log --pretty=format:"%ai|%ci|%s")
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+expected="2025-05-05 05:05:05 +0500|2026-06-06 06:06:06 +0600|old commit"
+assert "$expected" "$actual"
+
+###############################################################################
+: test set var GIT_PRIVACY_DISABLE to skip verification
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_clear_timestamp
+
+# ACT
+# git privacy verify
+actual="$(GIT_PRIVACY_DISABLE=1 privacy_verify; echo $?)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+expected=""
+assert "$expected" "$actual"
+
+###############################################################################
+: test set var GIT_PRIVACY_DISABLE to skip redacting after commit
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+privacy_init
+
+# ACT
+# git commit
+GIT_PRIVACY_DISABLE=1 commit_with_clear_timestamp
+actual="$(git log --pretty=format:"%ai|%ci|%s")"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+expected="2025-05-05 05:05:05 +0500|2026-06-06 06:06:06 +0600|old commit"
+assert "$expected" "$actual"
+
+###############################################################################
+: test set var GIT_PRIVACY_DISABLE to skip verifying before push
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_clear_timestamp
+
+git init --bare ./o.git/
+git remote add origin ./o.git/
+
+privacy_init
+
+# ACT
+# git push
+actual="$(GIT_PRIVACY_DISABLE=1 git push -u origin master; echo $?)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+expected="Branch 'master' set up to track remote branch 'master' from 'origin'.
+0"
+assert "$expected" "$actual"
+

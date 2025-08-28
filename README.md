@@ -43,6 +43,9 @@ git-privacy verify
 ```
 By default, `git-privacy verify` checks only un-pushed commits.
 
+To temporarily disable git-privacy, set the environment variable
+`GIT_PRIVACY_DISABLE` to anything.
+
 Run `git privacy help` for a list of all commands.
 
 ## Make git-privacy available by default
