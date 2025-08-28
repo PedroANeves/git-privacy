@@ -73,7 +73,7 @@ expected="2025-05-05 00:00:00 +0000|2026-06-06 00:00:00 +0000|old commit"
 assert "$expected" "$actual"
 
 ###############################################################################
-: test redact BRANCH to redact all commits on branch
+: test redact preserves untracked files
 ###############################################################################
 
 # SETUP
@@ -168,7 +168,7 @@ EOF
 assert "$expected" "$actual"
 
 ###############################################################################
-: test init makes hook executable
+: test init sets up pre-push hook
 ###############################################################################
 
 # SETUP
@@ -179,7 +179,41 @@ _setup playground
 # ACT
 # git privacy init
 privacy_init
-actual="$(test -x .git/hooks/post-commit; echo $?)"
+actual="$(cat .git/hooks/pre-push)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+read -d '' expected << 'EOF' || true
+#!/usr/bin/env bash
+
+# git-privacy hook to verify
+# set environment var GIT_PRIVACY_DISABLE to skip verification.
+
+set -e
+
+. "$(pwd)/$(dirname "$0")"/git-privacy
+privacy_verify
+EOF
+
+assert "$expected" "$actual"
+
+###############################################################################
+: test init makes hooks executable
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+
+# ACT
+# git privacy init
+privacy_init
+actual="$(
+  test -x .git/hooks/post-commit && test -x .git/hooks/pre-push
+  echo $?)"
 
 # TEARDOWN
 _teardown

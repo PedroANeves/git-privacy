@@ -47,8 +47,22 @@ set -e
 privacy_redact
 EOF
 
+read -d '' __pre_push << 'EOF' || true
+#!/usr/bin/env bash
+
+# git-privacy hook to verify
+# set environment var GIT_PRIVACY_DISABLE to skip verification.
+
+set -e
+
+. "$(pwd)/$(dirname "$0")"/git-privacy
+privacy_verify
+EOF
+
 function privacy_init() {
-  # creates the post-commit hook that redacts commit timestamps
+  # creates the post-commit and pre-push hooks
+  # post-commit - redacts commit timestamps
+  # pre-push - verifies that no leaked timestamps are published
 
   if [[ "$(git rev-parse --is-inside-work-tree)" != "true" ]]; then
     echo "git-privacy: not a git repo!"
@@ -58,9 +72,11 @@ function privacy_init() {
   # copies git-privacy locally
   cp "$(which git-privacy)" .git/hooks/git-privacy
 
-  # creates hook
+  # creates hooks
   echo "$__post_commit" > .git/hooks/post-commit
   chmod +x .git/hooks/post-commit
+  echo "$__pre_push" > .git/hooks/pre-push
+  chmod +x .git/hooks/pre-push
 
   echo "git privacy v$git_privacy_version initialized on $PWD"
 }
