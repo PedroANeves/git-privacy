@@ -4,8 +4,6 @@ set -eu
 
 # tests/run.sh - run tests
 
-die() { echo "$*" 1>&2 ; exit 1; }
-
 source git-privacy
 
 source tests/utils
@@ -15,7 +13,6 @@ _setup playground
 
 # PREPARE
 # old commit with timestamp
-git init
 GIT_AUTHOR_DATE=2025-05-05T05:05:05+0500 \
   GIT_COMMITTER_DATE=2026-06-06T06:06:06+0600 \
   git commit --allow-empty -m 'old commit'

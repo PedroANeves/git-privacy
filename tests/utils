@@ -15,6 +15,8 @@ function _setup() {
   rm -fr tests/$folder_name
   mkdir -p tests/$folder_name
   pushd tests/$folder_name > /dev/null || exit 1
+
+  git init
 }
 
 function _teardown() {
