@@ -8,6 +8,10 @@ source git-privacy
 
 source tests/utils
 
+###############################################################################
+# test redact last commit
+###############################################################################
+
 # SETUP
 _setup playground
 
@@ -24,4 +28,36 @@ _teardown
 
 # ASSERT
 expected="2025-05-05 00:00:00 +0000|2026-06-06 00:00:00 +0000|old commit"
+assert "$expected" "$actual"
+
+###############################################################################
+# test redact preserves untracked files
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_clear_timestamp
+echo 'data' > f
+
+# ACT
+# git privacy redact
+redact
+actual="$(git --no-pager diff --no-index -- /dev/null f | cat)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+read -d '' expected << EOF || true
+diff --git a/f b/f
+new file mode 100644
+index 0000000..1269488
+--- /dev/null
++++ b/f
+@@ -0,0 +1 @@
++data
+EOF
+
 assert "$expected" "$actual"
