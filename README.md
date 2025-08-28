@@ -23,6 +23,12 @@ To redact the last commit timestamp use
 git-privacy redact
 ```
 
+To verify that none of your local commits in the current branch are leaking
+timestamps use:
+```bash
+git-privacy verify
+```
+
 ## Make git-privacy available by default
 To make `git-privacy` work by default in all new repos,
 simply init it on your git template

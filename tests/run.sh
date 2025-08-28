@@ -4,7 +4,7 @@ set -xeu
 
 # tests/run.sh - run tests
 
-source git-privacy
+source ./git-privacy
 
 source tests/utils
 
@@ -165,3 +165,100 @@ _teardown
 # ASSERT
 assert ".git/hooks/git-privacy" "$actual"
 
+###############################################################################
+: test verify return errors if you have leaked timestamps
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_clear_timestamp
+
+# ACT
+# git privacy verify
+actual="$(privacy_verify; echo $?)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+assert "1" "$actual"
+
+###############################################################################
+: test verify return no errors if you only have redacted timestamps
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_redacted_timestamp
+
+# ACT
+# git privacy verify
+actual="$(privacy_verify; echo $?)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+assert "0" "$actual"
+
+###############################################################################
+: test verify return error if even a single commit has leaked timestamps
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_redacted_timestamp
+commit_with_redacted_timestamp
+commit_with_clear_timestamp
+commit_with_redacted_timestamp
+commit_with_redacted_timestamp
+
+# ACT
+# git privacy verify
+actual="$(privacy_verify; echo $?)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+assert "1" "$actual"
+
+###############################################################################
+: test verify by defaults only check local only commits
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_redacted_timestamp
+commit_with_redacted_timestamp
+commit_with_clear_timestamp
+commit_with_redacted_timestamp
+commit_with_redacted_timestamp
+
+git init --bare ./o.git/
+git remote add origin ./o.git/
+git push -u origin master
+
+commit_with_redacted_timestamp
+commit_with_redacted_timestamp
+commit_with_redacted_timestamp
+
+# ACT
+# git privacy verify
+actual="$(privacy_verify; echo $?)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+assert "0" "$actual"
+
+###############################################################################

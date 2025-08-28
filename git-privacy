@@ -64,3 +64,22 @@ function privacy_redact() {
 
   return
 }
+
+function privacy_verify() {
+  # checks if there are leaked timestamps
+
+  # if branch has remote,
+  if git status -sb | grep -Fq '...'; then
+    # check only unpushed commits
+    range='@{push}..'
+  else
+    # check everything
+    range=''
+  fi
+  
+  number_of_leaked_timestamps="$(
+    git log ${range} --pretty=format:'%ai|%ci' \
+      | grep -v '00:00:00 +0000' | wc -l
+  )"
+  return "$number_of_leaked_timestamps"
+}
