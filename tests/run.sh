@@ -390,21 +390,21 @@ read -d '' expected << EOF || true
 git privacy - keep your coding hours private.
 
 Usage:  git privacy [init|redact|verify]
-  or:   git privacy [--version]
-  or:   git privacy [--help|help|h]
+  or:   git privacy [-v,--version|version]
+  or:   git privacy [-h,--help|help]
 
-init                installs git privacy on current git repo and
-                    setup post-commit and pre-push hooks.
+init                    installs git privacy on current git repo and
+                        setup post-commit and pre-push hooks.
 
-redact              used automaticaly by post-commit hook to redact
-                    commiter and author timestamps.
+redact                  used automaticaly by post-commit hook to redact
+                        commiter and author timestamps.
 
-verify              used automaticaly by pre-push hook to check if
-                    current branch does not has any leaked timestamps.
-                    by default, only checks non pushed commits.
+verify                  used automaticaly by pre-push hook to check if
+                        current branch does not has any leaked timestamps.
+                        by default, only checks non pushed commits.
 
--v, --version       prints current version.
--h, --help, help    prints this help.
+-v, --version, version  prints current version.
+-h, --help, help        prints this help.
 EOF
 
 assert "$expected" "$actual"
