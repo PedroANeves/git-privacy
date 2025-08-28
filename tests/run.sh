@@ -92,3 +92,55 @@ Changes to be committed:
 EOF
 
 assert "$expected" "$actual"
+
+###############################################################################
+: test init sets up post-commit hook
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+
+# ACT
+# git privacy init
+privacy_init
+actual="$(cat .git/hooks/post-commit)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+read -d '' expected << 'EOF' || true
+#!/usr/bin/env bash
+
+# git-privacy hook to redact
+# set environment var GIT_PRIVACY_DISABLE to skip redacting.
+
+set -e
+
+. "$(pwd)/$(dirname "$0")"/git-privacy
+privacy_redact
+EOF
+
+assert "$expected" "$actual"
+
+###############################################################################
+: test init makes hook executable
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+
+# ACT
+# git privacy init
+privacy_init
+actual="$(test -x .git/hooks/post-commit; echo $?)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+assert "0" "$actual"

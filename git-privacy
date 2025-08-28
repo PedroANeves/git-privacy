@@ -4,6 +4,30 @@ set -eu
 
 # git privacy - keep your coding hours private
 
+read -d '' __post_commit << 'EOF' || true
+#!/usr/bin/env bash
+
+# git-privacy hook to redact
+# set environment var GIT_PRIVACY_DISABLE to skip redacting.
+
+set -e
+
+. "$(pwd)/$(dirname "$0")"/git-privacy
+privacy_redact
+EOF
+
+function privacy_init() {
+  # creates the post-commit hook that redacts commit timestamps
+
+  if [[ "$(git rev-parse --is-inside-work-tree)" != "true" ]]; then
+    echo "git-privacy: not a git repo!"
+    exit 1
+  fi
+
+  echo "$__post_commit" > .git/hooks/post-commit
+  chmod +x .git/hooks/post-commit
+}
+
 function privacy_redact() {
   # redacts last commit HH:MM:SS+ZZZZ to 00:00:00+0000
 
