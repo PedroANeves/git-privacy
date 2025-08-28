@@ -161,8 +161,7 @@ read -d '' expected << 'EOF' || true
 
 set -e
 
-. "$(pwd)/$(dirname "$0")"/git-privacy
-privacy_redact
+.git/hooks/git-privacy redact
 EOF
 
 assert "$expected" "$actual"
@@ -193,8 +192,7 @@ read -d '' expected << 'EOF' || true
 
 set -e
 
-. "$(pwd)/$(dirname "$0")"/git-privacy
-privacy_verify
+.git/hooks/git-privacy verify
 EOF
 
 assert "$expected" "$actual"

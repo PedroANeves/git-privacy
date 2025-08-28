@@ -42,8 +42,7 @@ read -d '' __post_commit << 'EOF' || true
 
 set -e
 
-. "$(pwd)/$(dirname "$0")"/git-privacy
-privacy_redact
+.git/hooks/git-privacy redact
 EOF
 
 read -d '' __pre_push << 'EOF' || true
@@ -54,8 +53,7 @@ read -d '' __pre_push << 'EOF' || true
 
 set -e
 
-. "$(pwd)/$(dirname "$0")"/git-privacy
-privacy_verify
+.git/hooks/git-privacy verify
 EOF
 
 function privacy_init() {
