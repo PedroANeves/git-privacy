@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -eu
-
 # git privacy - see `privacy_help()`.
 
 git_privacy_version='0.1.0'
@@ -80,6 +78,8 @@ function privacy_init() {
   chmod +x .git/hooks/pre-push
 
   echo "git privacy v$git_privacy_version initialized on $PWD"
+
+  return
 }
 
 function privacy_redact() {
