@@ -17,8 +17,10 @@ function redact() {
   commit_old_date=$(git log --date=format:'%Y-%m-%d' --pretty=format:'%cd' -n1)
   # commit_old_time=$(git log --date=format:'%H:%M:%S' --pretty=format:'%cd' -n1)
 
-  # stash changes (git commit --amend destroys untracked changes)
-  # TODO stash 
+  # stash changes (git commit --amend commits staged changes)
+  pre_stash_size=$(git stash list | wc -l)
+  git stash || true
+  post_stash_size=$(git stash list | wc -l)
 
   # calculate new author/commit timestamp
   author_new_datetime="${author_old_date}T00:00:00+0000"
@@ -30,7 +32,7 @@ function redact() {
     --amend --date="$author_new_datetime" --no-edit --no-verify --allow-empty
 
   # apply stash if any
-  # TODO unstash 
+  (( pre_stash_size != post_stash_size )) && git stash pop || true
 
   return
 }

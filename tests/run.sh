@@ -61,3 +61,34 @@ index 0000000..1269488
 EOF
 
 assert "$expected" "$actual"
+
+###############################################################################
+# test redact preserves staged files
+###############################################################################
+
+# SETUP
+_setup playground
+
+# PREPARE
+commit_with_clear_timestamp
+echo 'data' > f
+
+# ACT
+# git privacy redact
+git add f
+redact
+actual="$(git --no-pager status | cat)"
+
+# TEARDOWN
+_teardown
+
+# ASSERT
+read -d '' expected << EOF || true
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   f
+
+EOF
+
+assert "$expected" "$actual"
